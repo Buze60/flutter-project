@@ -1,96 +1,125 @@
 import 'package:ecommerce/pages/about.dart';
-import 'package:ecommerce/pages/shopePage.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Ensure you import provider package
+
+import '../Provider/themeProvider.dart'; // Adjust this path based on your structure
 
 class MyDrawerTile extends StatelessWidget {
   const MyDrawerTile({super.key});
 
   @override
   Widget build(BuildContext context) {
-//function for navigate to the pages
+    // Get the theme provider
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    // Function for navigation to the pages
     void homeNavigation() {
-      //pop the drawer page
+      // Pop the drawer page
       Navigator.pop(context);
-      //navigate the page to the home page
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const shopePage()),
-      );
+      // Navigate to the home page
     }
 
     return Drawer(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             children: [
-              //logo
+              // Logo
               DrawerHeader(
                 child: Image.asset(
                   "assets/image/nike_logo.jpg",
                 ),
               ),
-              //divider
+              // Divider
               Padding(
-                padding: const EdgeInsets.only(left: 25),
+                padding: EdgeInsets.only(left: 25),
                 child: Divider(
-                  color: Colors.grey[800],
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              //home tile
+              // Home tile
               GestureDetector(
                 onTap: homeNavigation,
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.only(left: 25),
                   child: ListTile(
                     leading: Icon(
                       Icons.home,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     title: Text(
                       "H o m e",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ),
                 ),
               ),
-              //about tile
+              // About tile
               GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const About()),
-                ),
-                child: const Padding(
+                onTap: () {
+                  Navigator.pop(context); // Close drawer before navigating
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const About()),
+                  );
+                },
+                child: Padding(
                   padding: EdgeInsets.only(left: 25),
                   child: ListTile(
                     leading: Icon(
                       Icons.info,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                     title: Text(
                       "A b o u t",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ),
                 ),
               ),
+              // Light/Dark Mode Toggle
+              SwitchListTile(
+                title: Text(
+                  "Dark Mode",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                secondary: Icon(
+                  themeProvider.themeMode == ThemeMode.dark
+                      ? Icons.dark_mode
+                      : Icons.light_mode,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                value: themeProvider.themeMode == ThemeMode.dark,
+                onChanged: (value) {
+                  themeProvider.toggleTheme(value);
+                },
+              ),
             ],
           ),
-          //logout
-          const Padding(
+          // Logout
+          Padding(
             padding: EdgeInsets.only(left: 25, bottom: 25),
             child: ListTile(
               leading: Icon(
                 Icons.logout,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               title: Text(
                 "L o g o u t",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

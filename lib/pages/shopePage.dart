@@ -44,9 +44,17 @@ class _shopePageState extends State<shopePage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text("Search"), Icon(Icons.search)],
+                  children: [
+                    Text("Search",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary)),
+                    Icon(
+                      Icons.search,
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  ],
                 ),
               ),
               Padding(

@@ -8,7 +8,7 @@ class About extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('About Us'),
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -21,7 +21,7 @@ class About extends StatelessWidget {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.blueGrey[800],
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
             const SizedBox(height: 10),
@@ -38,7 +38,7 @@ class About extends StatelessWidget {
             // Card for the main text content
             Card(
               elevation: 5,
-              shadowColor: Colors.blueGrey,
+              shadowColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
@@ -50,7 +50,7 @@ class About extends StatelessWidget {
                   "We hope you enjoy using our platform and find it useful in your daily life.",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey[800],
+                    color: Theme.of(context).colorScheme.secondary,
                     height: 1.5, // Line height for readability
                   ),
                   textAlign: TextAlign.justify,
