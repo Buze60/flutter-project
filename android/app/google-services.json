@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817518369766",
+    "project_id": "my-buze-project",
+    "storage_bucket": "my-buze-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817518369766:android:3835c5a74c354179d41427",
+        "android_client_info": {
+          "package_name": "com.example.pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5v4aEGfVK7CGy_v5cIWFk7bO3IWD9Ah8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
