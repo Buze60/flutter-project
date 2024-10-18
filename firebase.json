@@ -1,0 +1,22 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "my-buze-project",
+                    "appId": "1:817518369766:android:3835c5a74c354179d41427",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "my-buze-project",
+                    "configurations": {
+                        "android": "1:817518369766:android:3835c5a74c354179d41427",
+                        "ios": "1:817518369766:ios:58fc0424abe7f0dcd41427"
+                    }
+                }
+            }
+        }
+    }
+}
