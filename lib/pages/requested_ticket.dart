@@ -1,9 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:pro/Models/ticket_request.dart';
+import 'package:pro/component/my_ticket_detail.dart';
 import 'package:pro/services/database/database_service.dart';
 
 class RequestedTicket extends StatefulWidget {
-  const RequestedTicket({super.key});
+  const RequestedTicket({
+    super.key,
+  });
 
   @override
   State<RequestedTicket> createState() => _RequestedTicketState();
@@ -49,7 +54,16 @@ class _RequestedTicketState extends State<RequestedTicket> {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TicketDetailPage(
+                            ticket: ticket,
+                          ), // Use => instead of =
+                        ),
+                      );
+                    },
                     child: Card(
                       elevation: 20,
                       child: Padding(
@@ -57,6 +71,10 @@ class _RequestedTicketState extends State<RequestedTicket> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ticket Id
+                            Text('Ticket ID::: ${ticket.ticketID}'),
+                            const SizedBox(height: 20),
+                            Text('requested at: ${ticket.createdAt}'),
                             // Display the ticket title
                             Text(
                               'Title: ${ticket.title}',

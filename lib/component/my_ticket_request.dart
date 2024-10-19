@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pro/component/my_text_field.dart';
 import 'package:pro/services/database/database_service.dart';
 import 'package:pro/services/image_picker.dart/piker.dart'; // For image selection
 
@@ -12,8 +13,6 @@ class RequestTicketPage extends StatefulWidget {
 
 class _RequestTicketPageState extends State<RequestTicketPage> {
   final _formKey = GlobalKey<FormState>();
-//instance of the database_service & image picker
-//____________________________________________________________________________
   final _db = DatabaseService();
   final _img = Piker();
 
@@ -30,13 +29,12 @@ class _RequestTicketPageState extends State<RequestTicketPage> {
 
   // Image picker
   XFile? selectedImage;
-//get the instance of the image picker
-  final Piker selectedImagePath = Piker();
 
   // List of urgency levels and problem types
   List<String> urgencyLevels = ['Low', 'Medium', 'High'];
   List<String> problemTypes = ['Electrical', 'Mechanical', 'Plumbing', 'Other'];
-//save the data into the database
+
+  // Save the data into the database
   void saveRequest() async {
     await _db.saveTicketInfoInFirebase(
       title: titleController.text,
@@ -56,13 +54,177 @@ class _RequestTicketPageState extends State<RequestTicketPage> {
       // Clear form fields after submission
       titleController.clear();
       descriptionController.clear();
+      requistedByController.clear();
 
       setState(() {
         selectedUrgency = null;
         selectedProblemType = null;
         selectedImage = null;
       });
+
+      Navigator.of(context).pop(); // Close the dialog after submission
     }
+  }
+
+  // Function to show the AlertDialog with the form
+  void showRequestDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Request Maintenance Ticket'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  // Title field
+                  MyTextField(
+                    controller: titleController,
+                    hintText: "Title",
+                    obscuretext: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a title';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Description field
+                  MyTextField(
+                    controller: descriptionController,
+                    hintText: "Description",
+                    obscuretext: false,
+                    maxLine: 5,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a title';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Image picker
+
+                  //====================================================
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _img.showImageSourceDialog,
+                        child: const Text('Upload Image (Optional)'),
+                      ),
+                      const SizedBox(width: 10),
+                      if (selectedImage != null)
+                        const Text(
+                          'Image Selected',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Urgency dropdown
+                  DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(labelText: 'Urgency'),
+                    value: selectedUrgency,
+                    items: urgencyLevels.map((String urgency) {
+                      return DropdownMenuItem<String>(
+                        value: urgency,
+                        child: Text(urgency),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedUrgency = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select the urgency level';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Problem type dropdown
+                  DropdownButtonFormField<String>(
+                    decoration:
+                        const InputDecoration(labelText: 'Problem Type'),
+                    value: selectedProblemType,
+                    items: problemTypes.map((String problemType) {
+                      return DropdownMenuItem<String>(
+                        value: problemType,
+                        child: Text(problemType),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedProblemType = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select the problem type';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  // Requested by field
+                  MyTextField(
+                      controller: requistedByController,
+                      hintText: "requested by",
+                      obscuretext: false),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      //cancel button
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            )),
+                      ),
+                      // Submit button
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                        child: TextButton(
+                          onPressed: submitTicket,
+                          child: Text(
+                            'Submit',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -71,126 +233,10 @@ class _RequestTicketPageState extends State<RequestTicketPage> {
       appBar: AppBar(
         title: const Text('Request Maintenance Ticket'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Title field
-                TextFormField(
-                  controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Description field
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                  ),
-                  maxLines: 4,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Image picker
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => _img.showImageSourceDialog,
-                      child: const Text('Upload Image (Optional)'),
-                    ),
-                    const SizedBox(width: 10),
-                    if (selectedImage != null)
-                      const Text(
-                        'Image Selected',
-                        style: TextStyle(color: Colors.green),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Urgency dropdown
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Urgency'),
-                  value: selectedUrgency,
-                  items: urgencyLevels.map((String urgency) {
-                    return DropdownMenuItem<String>(
-                      value: urgency,
-                      child: Text(urgency),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedUrgency = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select the urgency level';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Problem type dropdown
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(labelText: 'Problem Type'),
-                  value: selectedProblemType,
-                  items: problemTypes.map((String problemType) {
-                    return DropdownMenuItem<String>(
-                      value: problemType,
-                      child: Text(problemType),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedProblemType = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select the problem type';
-                    }
-                    return null;
-                  },
-                ),
-                //requetsed by
-                TextFormField(
-                  controller: requistedByController,
-                  decoration: const InputDecoration(labelText: 'By Whom'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter witter';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Submit button
-                ElevatedButton(
-                  onPressed: submitTicket,
-                  child: const Text('Submit Ticket'),
-                ),
-              ],
-            ),
-          ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: showRequestDialog, // Show dialog when pressed
+          child: const Text('Open Ticket Form'),
         ),
       ),
     );

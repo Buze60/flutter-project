@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
       drawer: MyDrawer(),
       body: Container(),
       appBar: AppBar(
-        title: const Text('H O M E'),
+        title: const Text('A D M I N   D A S H B O A R D'),
         foregroundColor: Theme.of(context).colorScheme.primary,
       ),
     );

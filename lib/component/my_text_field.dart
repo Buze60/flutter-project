@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 /*
@@ -14,11 +16,16 @@ class MyTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscuretext;
-  const MyTextField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscuretext});
+  String? Function(String?)? validator;
+  int? maxLine;
+  MyTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.obscuretext,
+    this.validator,
+    this.maxLine,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -102,7 +102,7 @@ class MyDrawer extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => RequestTicketPage()));
+                          builder: (context) => const RequestTicketPage()));
                 },
               ),
               MyDrawerTile(
@@ -115,7 +115,7 @@ class MyDrawer extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RequestedTicket()));
+                          builder: (context) => RequestedTicket()));
                 },
               ),
               //setting list tile
